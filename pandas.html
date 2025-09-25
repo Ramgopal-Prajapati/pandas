@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandas Mastery | PyData School</title>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #132626;
+            --bg-dark: #0d1919;
+            --card-bg: #17313b;
+            --accent: #00c2b2;
+            --accent-light: #00e5ff;
+            --primary: #ff9800;
+            --secondary: #26a69a;
+            --info: #29b6f6;
+            --warning: #ffd54f;
+            --danger: #e57373;
+            --success: #66bb6a;
+            --text: #f2f6f8;
+            --text-muted: #b0bec5;
+            --border: #2e4444;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        a { color: var(--accent); text-decoration: none; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: var(--bg-dark);
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .header-content {
+            display: flex; justify-content: space-between; align-items: center; gap: 2rem;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 12px; font-size: 2rem; font-weight: 700;
+        }
+        .logo .material-icons { color: var(--accent); font-size: 2.4rem; }
+        .instructor {
+            font-size: 1rem; color: var(--accent-light);
+        }
+        nav ul {
+            display: flex; gap: 1.2rem; list-style: none; margin: 0; padding: 0;
+        }
+        nav a {
+            color: var(--text); font-weight: 500; padding: 6px 14px; border-radius: 4px; transition: 0.25s;
+        }
+        nav a:hover { background: var(--accent); color: var(--bg-dark); }
+        .hero {
+            padding: 3.5rem 1rem 2.2rem 1rem;
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--accent) 100%);
+            color: #fff;
+            text-align: center;
+            border-radius: 0 0 16px 16px;
+            margin-bottom: 2.4rem;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            margin-bottom: 0.9rem;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(90deg, #fff 60%, #ffd54f 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { color: #f7f7f7; max-width: 700px; margin: 0 auto 1.6rem; font-size: 1.2rem; }
+        .btn {
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: var(--bg-dark);
+            padding: 12px 32px;
+            border: none;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,194,178,0.13);
+            transition: transform 0.19s, box-shadow 0.19s;
+        }
+        .btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 24px rgba(0,194,178,0.22);}
+        .instructor-section {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+        }
+        .instructor-img {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.1rem; color: white;
+        }
+        @media (max-width: 600px) {
+            .instructor-section { flex-direction: column; text-align: center; }
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.3rem;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 70px; height: 4px;
+            background: var(--accent);
+            margin: 12px auto 0 auto;
+            border-radius: 2px;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.11);
+            padding: 1.6rem 1.1rem;
+            display: flex; flex-direction: column; align-items: flex-start;
+            border-left: 5px solid var(--accent);
+            transition: 0.22s;
+        }
+        .feature-card:hover { transform: scale(1.03); border-left: 7px solid var(--primary);}
+        .feature-card .material-icons { font-size: 2.3rem; margin-bottom: 0.7rem; color: var(--primary);}
+        .feature-card h3 { margin-bottom: 0.6rem; }
+        .feature-card ul { margin: 0 0 0.8rem 0; padding-left: 1.1rem;}
+        .feature-card li { color: var(--text-muted); margin-bottom: 0.23rem;}
+        /* Tabs */
+        .tabs { display: flex; background: var(--bg-dark); border-radius: 7px 7px 0 0; overflow: hidden;}
+        .tab {
+            flex: 1 0 20%;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: background 0.24s, border 0.22s;
+        }
+        .tab.active {
+            background: var(--bg-dark);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; padding: 1.5rem; background: var(--bg-dark); border-radius: 0 0 7px 7px; box-shadow: 0 5px 15px rgba(0,0,0,0.08);}
+        .tab-content.active { display: block; }
+        .example, .notes { margin: 1.1rem 0; border-radius: 6px; }
+        .example {
+            background: rgba(0,194,178,0.08);
+            border-left: 5px solid var(--secondary);
+            padding: 1.2rem;
+        }
+        .example h4, .notes h4 { display: flex; align-items: center; gap: 9px; color: var(--secondary); margin-bottom: 0.5rem;}
+        .notes {
+            background: rgba(255,152,0,0.09);
+            border-left: 5px solid var(--primary);
+            padding: 1.1rem;
+        }
+        pre {
+            background: #22343f;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 0.7rem 0;
+            border: 1px solid var(--border);
+        }
+        code { color: #80cbc4; font-size: 1.08em;}
+        /* Playground */
+        .playground {
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.11);
+            margin: 3rem 0;
+            border: 1px solid var(--border);
+        }
+        .playground-header {
+            background: var(--bg-dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .playground-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+            padding: 1.5rem;
+        }
+        @media (max-width: 800px) {
+            .playground-body { grid-template-columns: 1fr;}
+        }
+        .code-editor, .result-area {
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 1rem;
+            background: var(--bg-dark);
+            min-height: 180px; width: 100%;
+            color: var(--text);
+        }
+        .code-editor { font-family: 'Fira Mono', 'Courier New', monospace; resize: vertical;}
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+            font-size: 1rem;
+        }
+        @media (max-width: 700px) {
+            .header-content { flex-direction: column; gap: 1rem;}
+            .card-grid { grid-template-columns: 1fr;}
+            .tabs { flex-wrap: wrap;}
+            .tab { flex: 1 0 33%;}
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-content">
+        <div>
+            <div class="logo">
+                <span class="material-icons">table_chart</span>
+                <span>PyData School</span>
+            </div>
+            <div class="instructor">Course by Ram Sir</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Libraries</a></li>
+                <li><a href="#">Practice</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <h1>
+            <span class="material-icons">table_view</span>
+            Pandas Mastery Course
+        </h1>
+        <p>
+            Master data analysis with Pandas: from basics to advanced, with real code, hands-on labs, and expert guidance by Ram Sir.
+        </p>
+        <a href="#course-content" class="btn">Start Learning Pandas</a>
+    </div>
+</section>
+<!-- Instructor Section -->
+<section class="container instructor-section">
+    <div class="instructor-img">
+        <span class="material-icons">person</span>
+    </div>
+    <div>
+        <h2>About Your Instructor</h2>
+        <p>
+            Ram Sir, specialist in Python Data Science, has 15+ years of experience in analytics, machine learning, and teaching Pandas to thousands of students and professionals.
+        </p>
+    </div>
+</section>
+<!-- Course Content Overview -->
+<section class="container" id="course-content">
+    <h2 class="section-title">Pandas Core Concepts</h2>
+    <div class="card-grid">
+        <div class="feature-card">
+            <span class="material-icons">view_module</span>
+            <h3>Data Creation</h3>
+            <ul>
+                <li>Series & DataFrame</li>
+                <li>From lists, dicts, arrays</li>
+                <li>Reading files (CSV, Excel...)</li>
+            </ul>
+            <button class="btn" onclick="showTab('creation-tab')">Learn More</button>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">filter_list</span>
+            <h3>Selection & Indexing</h3>
+            <ul>
+                <li>loc, iloc, at, iat</li>
+                <li>Boolean & fancy indexing</li>
+                <li>Setting values</li>
+            </ul>
+            <button class="btn" onclick="showTab('selection-tab')">Learn More</button>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">calculate</span>
+            <h3>Operations</h3>
+            <ul>
+                <li>Aggregation & stats</li>
+                <li>Apply, map, transform</li>
+                <li>Missing data</li>
+            </ul>
+            <button class="btn" onclick="showTab('operations-tab')">Learn More</button>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">group_work</span>
+            <h3>Grouping & Merging</h3>
+            <ul>
+                <li>groupby, pivot, melt</li>
+                <li>merge, join, concat</li>
+                <li>Reshaping data</li>
+            </ul>
+            <button class="btn" onclick="showTab('grouping-tab')">Learn More</button>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">schedule</span>
+            <h3>Timeseries & Advanced</h3>
+            <ul>
+                <li>Date/time, resample</li>
+                <li>Window functions</li>
+                <li>Advanced tricks</li>
+            </ul>
+            <button class="btn" onclick="showTab('advanced-tab')">Learn More</button>
+        </div>
+    </div>
+</section>
+<!-- Tabs Section -->
+<section class="container tab-container">
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('creation-tab')">Creation</div>
+        <div class="tab" onclick="showTab('selection-tab')">Selection</div>
+        <div class="tab" onclick="showTab('operations-tab')">Operations</div>
+        <div class="tab" onclick="showTab('grouping-tab')">Grouping</div>
+        <div class="tab" onclick="showTab('advanced-tab')">Advanced</div>
+    </div>
+    <!-- Data Creation Tab -->
+    <div id="creation-tab" class="tab-content active">
+        <h2><span class="material-icons">view_module</span> Data Creation</h2>
+        <p>
+            Pandas provides <b>Series</b> (1D) and <b>DataFrame</b> (2D) as primary structures.
+        </p>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Creating Series & DataFrames</h4>
+            <pre><code>import pandas as pd
+
+s = pd.Series([1, 2, 3], index=['a','b','c'])
+df = pd.DataFrame({
+    'name': ['Alice','Bob'],
+    'age': [23, 34]
+})
+
+# From numpy array
+import numpy as np
+df2 = pd.DataFrame(np.arange(6).reshape(2,3), columns=['A','B','C'])</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Reading Files</h4>
+            <pre><code>df = pd.read_csv("data.csv")
+df = pd.read_excel("data.xlsx")
+df = pd.read_json("data.json")</code></pre>
+        </div>
+        <div class="notes">
+            <h4><span class="material-icons">sticky_note_2</span> Key Notes</h4>
+            <p>
+                Use <b>pd.DataFrame.from_dict()</b>, <b>from_records()</b> for advanced creation. DataFrame columns can have different types.
+            </p>
+        </div>
+    </div>
+    <!-- Selection Tab -->
+    <div id="selection-tab" class="tab-content">
+        <h2><span class="material-icons">filter_list</span> Selection & Indexing</h2>
+        <p>
+            Access and manipulate data using powerful indexing features:
+        </p>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Column, Row Access</h4>
+            <pre><code>df['age']          # Series
+df[['name','age']] # DataFrame
+df.loc[0]          # Row by label/index
+df.iloc[0,1]       # Row/col by integer
+df.at[0,'age']     # Fast scalar access
+df.iat[0,1]        # Fast scalar by position</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Boolean, Fancy Indexing</h4>
+            <pre><code>mask = df['age'] > 25
+df[mask]          # Filter rows
+
+df.loc[df['age']>30, 'name'] # Select name where age>30
+
+df.iloc[[0,2], [1,2]]  # Fancy row/col selection</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Setting Values</h4>
+            <pre><code>df.loc[1, 'age'] = 40
+df['new_col'] = df['age'] * 2</code></pre>
+        </div>
+        <div class="notes">
+            <h4><span class="material-icons">sticky_note_2</span> Good to Know</h4>
+            <p>
+                Use <b>loc</b> for label-based and <b>iloc</b> for integer-based indexing. Boolean indexing is extremely powerful!
+            </p>
+        </div>
+    </div>
+    <!-- Operations Tab -->
+    <div id="operations-tab" class="tab-content">
+        <h2><span class="material-icons">calculate</span> Operations & Aggregations</h2>
+        <p>
+            Manipulate and analyze data with vectorized ops, stats, apply/map, and handle missing data:
+        </p>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Aggregation & Descriptive Stats</h4>
+            <pre><code>df.sum()
+df.mean()
+df.describe()
+df['age'].min()
+df.count()</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Apply, Map, Transform</h4>
+            <pre><code>df['age_plus_10'] = df['age'].apply(lambda x: x+10)
+df['name_len'] = df['name'].map(len)
+df.transform({'age': np.sqrt})</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Handling Missing Data</h4>
+            <pre><code>df.isnull()
+df.dropna()
+df.fillna(0)
+df['col'].fillna(df['col'].mean())</code></pre>
+        </div>
+        <div class="notes">
+            <h4><span class="material-icons">sticky_note_2</span> Good to Know</h4>
+            <p>
+                <b>apply()</b> works row/col-wise, <b>map()</b> on Series. Use <b>fillna()</b> and <b>dropna()</b> for NaN.
+            </p>
+        </div>
+    </div>
+    <!-- Grouping Tab -->
+    <div id="grouping-tab" class="tab-content">
+        <h2><span class="material-icons">group_work</span> Grouping, Merging, Reshaping</h2>
+        <p>
+            Combine, reshape, and summarize data:
+        </p>
+        <div class="example">
+            <h4><span class="material-icons">code</span> groupby, pivot, melt</h4>
+            <pre><code>df.groupby('dept')['age'].mean()
+df.pivot_table(index='dept', columns='gender', values='salary', aggfunc='sum')
+pd.melt(df, id_vars=['name'], value_vars=['age','salary'])</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Merging & Joining</h4>
+            <pre><code>pd.concat([df1, df2], axis=0)     # Stack rows
+pd.concat([df1, df2], axis=1)     # Stack columns
+pd.merge(df1, df2, on='id', how='inner')
+df1.join(df2, rsuffix='_other')</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Reshaping</h4>
+            <pre><code>df.stack()
+df.unstack()
+df.T      # Transpose
+df.reset_index()</code></pre>
+        </div>
+        <div class="notes">
+            <h4><span class="material-icons">sticky_note_2</span> Good to Know</h4>
+            <p>
+                <b>groupby</b> is for summary stats per group; <b>pivot</b> and <b>melt</b> reshape data; <b>merge</b> is like SQL join.
+            </p>
+        </div>
+    </div>
+    <!-- Advanced Tab -->
+    <div id="advanced-tab" class="tab-content">
+        <h2><span class="material-icons">schedule</span> Timeseries & Advanced</h2>
+        <p>
+            Handle dates, rolling windows, categorical data, IO, and advanced tricks:
+        </p>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Dates, Timeseries</h4>
+            <pre><code>dt = pd.date_range("2023-01-01", periods=5, freq='D')
+df['date'] = pd.to_datetime(df['date'])
+df.set_index('date', inplace=True)
+df.resample('M').mean()
+df.rolling(window=3).mean()</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> Categorical & String Ops</h4>
+            <pre><code>df['cat'] = df['col'].astype('category')
+df['name'].str.upper()
+df['email'].str.contains('gmail')</code></pre>
+        </div>
+        <div class="example">
+            <h4><span class="material-icons">code</span> IO: Read/Write Files</h4>
+            <pre><code>df.to_csv("out.csv")
+df.to_excel("out.xlsx")
+df.to_json("out.json")
+df.to_sql("table", conn)</code></pre>
+        </div>
+        <div class="notes">
+            <h4><span class="material-icons">sticky_note_2</span> Key Notes</h4>
+            <p>
+                Pandas is great for timeseries, categorical, and text data. Use <b>read_*</b> and <b>to_*</b> for file IO.
+            </p>
+        </div>
+    </div>
+</section>
+<!-- Playground -->
+<section class="container">
+    <h2 class="section-title">Pandas Playground</h2>
+    <div class="playground">
+        <div class="playground-header">
+            <h3>Try Pandas Code</h3>
+            <button class="btn" onclick="runPy()">Run Code <span class='material-icons'>play_arrow</span></button>
+        </div>
+        <div class="playground-body">
+            <textarea class="code-editor" id="py-query" placeholder="Write Pandas code here...">import pandas as pd
+df = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
+print(df)
+print(df.mean())
+</textarea>
+            <div class="result-area" id="py-result">
+                <p>Results will appear here...</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Function Reference -->
+<section class="container">
+    <h2 class="section-title">Pandas Function Reference</h2>
+    <p style="text-align:center; max-width:700px; margin:0 auto 2.2rem; color:var(--text-muted);">
+        Most-used Pandas functions with quick examples:
+    </p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:2rem;">
+        <div class="feature-card">
+            <span class="material-icons">add_box</span>
+            <h3>Data Creation</h3>
+            <ul>
+                <li><b>pd.Series()</b>, <b>pd.DataFrame()</b></li>
+                <li><b>read_csv()</b>, <b>read_excel()</b>, <b>read_json()</b></li>
+                <li><b>from_dict()</b>, <b>from_records()</b></li>
+            </ul>
+<pre><code>df = pd.read_csv("data.csv")
+df = pd.DataFrame([[1,2],[3,4]], columns=["A","B"])</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">filter_list</span>
+            <h3>Selection & Indexing</h3>
+            <ul>
+                <li><b>loc</b>, <b>iloc</b>, <b>at</b>, <b>iat</b></li>
+                <li>Boolean/fancy indexing</li>
+            </ul>
+<pre><code>df.loc[0, 'A']
+df[df['A'] > 1]</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">calculate</span>
+            <h3>Math & Aggregation</h3>
+            <ul>
+                <li><b>sum()</b>, <b>mean()</b>, <b>median()</b></li>
+                <li><b>describe()</b>, <b>apply()</b>, <b>map()</b></li>
+            </ul>
+<pre><code>df.mean()
+df['A'].apply(np.sqrt)
+</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">group_work</span>
+            <h3>Grouping & Merging</h3>
+            <ul>
+                <li><b>groupby()</b>, <b>pivot_table()</b>, <b>melt()</b></li>
+                <li><b>merge()</b>, <b>concat()</b>, <b>join()</b></li>
+            </ul>
+<pre><code>df.groupby('cat').sum()
+pd.merge(df1, df2, on='id')</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">schedule</span>
+            <h3>Timeseries & Resample</h3>
+            <ul>
+                <li><b>date_range()</b>, <b>to_datetime()</b></li>
+                <li><b>resample()</b>, <b>rolling()</b></li>
+            </ul>
+<pre><code>df['date'] = pd.to_datetime(df['date'])
+df.resample('M').sum()</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">cloud_upload</span>
+            <h3>File IO</h3>
+            <ul>
+                <li><b>to_csv()</b>, <b>to_excel()</b>, <b>to_json()</b></li>
+                <li><b>to_sql()</b>, <b>read_sql()</b></li>
+            </ul>
+<pre><code>df.to_csv("out.csv")
+df.to_sql("table", conn)</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">error_outline</span>
+            <h3>Missing Data</h3>
+            <ul>
+                <li><b>isnull()</b>, <b>dropna()</b>, <b>fillna()</b></li>
+            </ul>
+<pre><code>df.dropna()
+df.fillna(0)
+</code></pre>
+        </div>
+        <div class="feature-card">
+            <span class="material-icons">text_fields</span>
+            <h3>String & Category</h3>
+            <ul>
+                <li><b>str.upper()</b>, <b>str.contains()</b></li>
+                <li><b>astype('category')</b></li>
+            </ul>
+<pre><code>df['name'].str.lower()
+df['type'] = df['type'].astype('category')</code></pre>
+        </div>
+    </div>
+</section>
+<footer>
+    <div class="container">
+        <p>&copy; 2025 PyData School. All rights reserved.</p>
+        <p>Pandas Mastery Course by Ram Sir</p>
+    </div>
+</footer>
+<script>
+    // Tab switching
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        let tabNames = ['creation-tab','selection-tab','operations-tab','grouping-tab','advanced-tab'];
+        let idx = tabNames.indexOf(tabId);
+        if (idx >= 0) document.querySelectorAll('.tab')[idx].classList.add('active');
+    }
+    // Playground simulation (simple teaching demo)
+    function runPy() {
+        const code = document.getElementById('py-query').value.trim();
+        const resultArea = document.getElementById('py-result');
+        if (code.includes("pd.DataFrame({")) {
+            resultArea.innerHTML = '<pre>   A  B\n0  1  3\n1  2  4\nA    1.5\nB    3.5\ndtype: float64</pre>';
+        } else if (code.includes("mean()")) {
+            resultArea.innerHTML = '<pre>A    1.5\nB    3.5\ndtype: float64</pre>';
+        } else if (code.includes("read_csv")) {
+            resultArea.innerHTML = '<pre>Loaded data.csv successfully!</pre>';
+        } else if (code.includes("groupby")) {
+            resultArea.innerHTML = '<pre>dept\nHR      28.0\nIT      35.5\nName: age, dtype: float64</pre>';
+        } else if (code.includes("fillna")) {
+            resultArea.innerHTML = '<pre>Filled NaN values with 0.</pre>';
+        } else if (code.includes("to_csv")) {
+            resultArea.innerHTML = '<pre>Data written to out.csv</pre>';
+        } else {
+            resultArea.innerHTML = '<pre>Output simulated. (Try "mean()", "groupby", "fillna", etc.)</pre>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() { runPy(); });
+</script>
+</body>
+</html>
